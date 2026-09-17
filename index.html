@@ -263,6 +263,58 @@ h1,h2,h3{ letter-spacing:-0.028em; font-weight:700; line-height:1.15; }
 .overlay{ position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:color-mix(in srgb,var(--paper) 72%, transparent); backdrop-filter:blur(9px); }
 .overlay[hidden]{ display:none; }
 .celcard{ width:min(400px,90vw); text-align:center; padding:34px 28px; animation:rise .5s cubic-bezier(.2,.9,.25,1); }
+
+/* ---------- Admin panel ---------- */
+.admin-card{
+  width:min(760px, 94vw); max-height:min(720px, 88vh); display:flex; flex-direction:column;
+  padding:24px; text-align:left; animation:rise .4s cubic-bezier(.2,.9,.25,1);
+}
+.admin-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px; }
+.admin-tabs{ margin-bottom:18px; align-self:flex-start; }
+.admin-body{ overflow-y:auto; padding-right:4px; flex:1; }
+.admin-body [data-panel][hidden]{ display:none; }
+.admin-divider{ height:1px; background:var(--line); margin:18px 0; }
+
+.field-label{ display:block; font-size:12px; font-weight:650; margin-bottom:7px; }
+.field-input{
+  flex:1; min-width:220px; height:38px; padding:0 12px; border-radius:10px;
+  border:1px solid var(--line-2); background:var(--card-2); color:var(--ink);
+  font-family:inherit; font-size:13px;
+}
+.field-input:focus{ outline:none; border-color:var(--blue); }
+textarea.field-input{ height:auto; padding:10px 12px; resize:vertical; }
+.field-hint{ font-size:12px; color:var(--ink-3); margin-top:8px; line-height:1.5; }
+
+.rule-group{ margin-bottom:22px; }
+.rule-group-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:9px; gap:10px; flex-wrap:wrap; }
+.rule-group-head h4{ font-size:14px; }
+.rule-table{ display:flex; flex-direction:column; gap:6px; }
+.rule-row{
+  display:grid; grid-template-columns:1.3fr 1.6fr 70px 70px 90px 26px;
+  gap:7px; align-items:center; padding:8px; border-radius:10px; background:var(--card-2); border:1px solid var(--line);
+}
+.rule-row.is-hold{ opacity:.65; }
+.rule-row input, .rule-row select{
+  width:100%; height:30px; padding:0 8px; border-radius:7px; border:1px solid var(--line); background:var(--card);
+  color:var(--ink); font-family:inherit; font-size:11.5px;
+}
+.rule-row input:focus, .rule-row select:focus{ outline:none; border-color:var(--blue); }
+.rule-row input[type=number]{ text-align:center; }
+.rule-del{
+  width:26px; height:26px; border-radius:7px; border:1px solid var(--line); background:var(--card);
+  color:var(--ink-3); display:grid; place-items:center; cursor:pointer;
+}
+.rule-del:hover{ color:var(--coral); border-color:color-mix(in srgb,var(--coral) 40%,transparent); }
+.rule-row-labels{
+  display:grid; grid-template-columns:1.3fr 1.6fr 70px 70px 90px 26px; gap:7px;
+  font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-4); font-weight:600; padding:0 8px; margin-bottom:2px;
+}
+@media (max-width:640px){
+  .rule-row, .rule-row-labels{ grid-template-columns:1fr; }
+  .rule-row-labels{ display:none; }
+  .rule-row{ grid-template-columns:1fr 1fr; }
+  .rule-row > *:nth-child(1), .rule-row > *:nth-child(2){ grid-column:1/-1; }
+}
 @keyframes rise{ from{ transform:translateY(18px) scale(.96); opacity:0; } to{ transform:none; opacity:1; } }
 .cel-ic{ width:66px; height:66px; margin:0 auto 16px; border-radius:20px; display:grid; place-items:center; background:linear-gradient(150deg,var(--blue),var(--green)); color:#fff; }
 
@@ -428,6 +480,7 @@ svg.i.fill{ fill:currentColor; stroke:none; }
     <span class="pill" id="today-pill"></span>
     <span class="pill live" id="live-pill"><span class="dot"></span><span id="live-txt">Syncing</span></span>
     <button class="iconbtn" id="theme-btn" title="Switch theme" aria-label="Switch theme"></button>
+    <button class="iconbtn" id="admin-btn" title="Admin panel" aria-label="Open admin panel"></button>
     <button class="btn sync-btn" id="refresh-btn" aria-label="Sync sheet now">
       <span class="sync-ic"></span><span class="sync-label">Sync sheet</span>
     </button>
@@ -451,6 +504,12 @@ svg.i.fill{ fill:currentColor; stroke:none; }
 
   <main id="main" hidden>
     <section id="weekly" style="margin-top:16px;"></section>
+
+    <div class="section-head">
+      <h2>Editorial plan</h2>
+      <span class="eyebrow">Set in the admin panel &middot; the real agreed volume, not the checklist</span>
+    </div>
+    <section id="editorial-plan" class="grid g2"></section>
 
     <div class="section-head"><h2>This month at a glance</h2><span class="eyebrow" id="month-label"></span></div>
     <section id="kpis" class="grid g4"></section>
@@ -494,13 +553,134 @@ svg.i.fill{ fill:currentColor; stroke:none; }
   </div>
 </div>
 
+<div class="overlay" id="admin-overlay" hidden>
+  <div class="card admin-card">
+    <div class="admin-head">
+      <div>
+        <h2 style="font-size:19px;">Admin panel</h2>
+        <p class="eyebrow" style="margin-top:3px;">Saved in this browser only · the sheet itself never changes</p>
+      </div>
+      <button class="iconbtn" id="admin-close" aria-label="Close admin panel"></button>
+    </div>
+    <div class="segbar admin-tabs" role="tablist">
+      <button class="seg" data-tab="source" aria-selected="true">Data source</button>
+      <button class="seg" data-tab="rules" aria-selected="false">Editorial rules</button>
+      <button class="seg" data-tab="data" aria-selected="false">Backup &amp; reset</button>
+    </div>
+
+    <div class="admin-body" id="admin-body">
+      <!-- Data source -->
+      <section data-panel="source">
+        <label class="field-label">Google Sheet URL or ID</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="text" id="sheet-url-input" class="field-input" placeholder="Paste the full Google Sheets link, or just the sheet ID">
+          <button class="btn primary" id="sheet-url-save">Save &amp; sync</button>
+        </div>
+        <p class="field-hint" id="sheet-url-current"></p>
+        <div class="admin-divider"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:650; font-size:13.5px;">Hard refresh</div>
+            <p class="field-hint" style="margin-top:2px;">Re-discovers every month tab and re-fetches every row from scratch, bypassing anything cached.</p>
+          </div>
+          <button class="btn" id="hard-refresh-btn">Hard refresh</button>
+        </div>
+      </section>
+
+      <!-- Rules -->
+      <section data-panel="rules" hidden>
+        <p class="field-hint" style="margin-bottom:12px;">The sheet only records what got posted, never what the plan was. These are the real weekly/monthly quotas per manager. Editing them changes every target and progress number on the dashboard immediately.</p>
+        <div id="rules-groups"></div>
+        <button class="btn" id="add-rule-btn" style="margin-top:14px;">Add a rule</button>
+      </section>
+
+      <!-- Backup & reset -->
+      <section data-panel="data" hidden>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+          <div>
+            <div style="font-weight:650; font-size:13.5px;">Export configuration</div>
+            <p class="field-hint" style="margin-top:2px;">Download the sheet source and every rule as one JSON file, so you can back it up or move it to another browser.</p>
+          </div>
+          <button class="btn" id="export-btn">Export JSON</button>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-weight:650; font-size:13.5px; margin-bottom:6px;">Import configuration</div>
+          <textarea id="import-text" class="field-input" style="width:100%; min-height:90px; font-family:'JetBrains Mono',monospace; font-size:11.5px;" placeholder="Paste an exported JSON config here"></textarea>
+          <button class="btn" id="import-btn" style="margin-top:8px;">Load this JSON</button>
+        </div>
+        <div class="admin-divider"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:650; font-size:13.5px; color:var(--coral);">Reset to defaults</div>
+            <p class="field-hint" style="margin-top:2px;">Restores the original sheet ID and the seeded rule set. Cannot be undone.</p>
+          </div>
+          <button class="btn" id="reset-btn" style="border-color:color-mix(in srgb,var(--coral) 40%,transparent); color:var(--coral);">Reset everything</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ============================================================
    1. CONFIG
    Add a month: copy a row, set the tab name and its gid
    (the gid is in the sheet tab URL: /edit?gid=XXXXXXX)
    ============================================================ */
-const SHEET_ID = "1iRFsCl1oMcprbX9Kw7A3gachh0xUMh7hxlNIyhLLX7U";
+const DEFAULT_SHEET_ID = "1iRFsCl1oMcprbX9Kw7A3gachh0xUMh7hxlNIyhLLX7U";
+
+/* ============================================================
+   1b. Admin config — sheet source + editorial rules.
+   Lives in this browser's localStorage. The sheet stays the single source of
+   truth for what was actually posted; this config only says what the plan
+   is, since the sheet itself has no fixed weekly/monthly quota anywhere.
+   ============================================================ */
+const CONFIG_KEY = 'if-dashboard-config-v1';
+
+/* Seeded once from the real weekly/monthly editorial plan. `weekly` is the
+   canonical figure (what actually repeats every week); `monthly` is what the
+   team quotes as the monthly total, and the two do not always divide evenly
+   because real months and real weeks do not line up. `spread` says whether a
+   quota is delivered on working days only or every day (stories run daily). */
+const DEFAULT_RULES = [
+  // ---------------- Hindi · Bhavika ----------------
+  { id:'hi-reels',   manager:'Hindi', type:'Fresh reels',        platforms:'Instagram, Facebook, YouTube',                 weekly:4,  monthly:15,  spread:'weekday', status:'active', note:'' },
+  { id:'hi-photo',   manager:'Hindi', type:'Photo dump',         platforms:'Instagram, Facebook, YouTube, WhatsApp, LinkedIn', weekly:1, monthly:4, spread:'weekday', status:'active', note:'' },
+  { id:'hi-carousel',manager:'Hindi', type:'Carousel',           platforms:'Instagram, Facebook, YouTube, WhatsApp, LinkedIn', weekly:1, monthly:4, spread:'weekday', status:'active', note:'' },
+  { id:'hi-articles',manager:'Hindi', type:'Articles',           platforms:'X (Twitter)',                                  weekly:3,  monthly:12,  spread:'weekday', status:'active', note:'' },
+  { id:'hi-xone',    manager:'Hindi', type:'X one-liners',       platforms:'X (Twitter)',                                  weekly:null, monthly:10, spread:'weekday', status:'active', note:'No fixed weekly schedule' },
+  { id:'hi-xvideo',  manager:'Hindi', type:'X best-performing videos', platforms:'X (Twitter)',                            weekly:2,  monthly:8,   spread:'weekday', status:'active', note:'Repurposed clips' },
+  { id:'hi-longform',manager:'Hindi', type:'Long-form video',    platforms:'YouTube, Facebook',                            weekly:1,  monthly:4,   spread:'weekday', status:'hold',   note:'Fridays 7pm · on hold until next content bank' },
+  { id:'hi-stories', manager:'Hindi', type:'Stories',            platforms:'Instagram, Facebook',                         weekly:21, monthly:84,  spread:'daily',   status:'active', note:'3 per day' },
+
+  // ---------------- Marathi · Aditi ----------------
+  { id:'mr-reels',   manager:'Marathi', type:'Fresh reels',      platforms:'Instagram, Facebook, YouTube (santoshjadhav.if)', weekly:4, monthly:15, spread:'weekday', status:'active', note:'' },
+  { id:'mr-podcast', manager:'Marathi', type:'Podcast reels',    platforms:'Instagram (maativerse.if), Facebook, YouTube (santoshjadhav.if)', weekly:7, monthly:35, spread:'weekday', status:'active', note:'11 total reels/week with fresh reels' },
+  { id:'mr-photo',   manager:'Marathi', type:'Photo dump',       platforms:'Instagram, Facebook, YouTube, WhatsApp (santoshjadhav.if)', weekly:1, monthly:4, spread:'weekday', status:'active', note:'' },
+  { id:'mr-carousel',manager:'Marathi', type:'Carousel',         platforms:'Instagram, Facebook, YouTube, WhatsApp',       weekly:1,  monthly:4,   spread:'weekday', status:'active', note:'' },
+  { id:'mr-articles',manager:'Marathi', type:'Articles',         platforms:'Maativerse, Instagram, YouTube Community, Facebook', weekly:3, monthly:12, spread:'weekday', status:'active', note:'' },
+  { id:'mr-longform',manager:'Marathi', type:'Podcast (long-form)', platforms:'YouTube, Facebook',                         weekly:1,  monthly:4,   spread:'weekday', status:'hold',   note:'Thursdays 11am · on hold until Maativerse 2.0 launch' },
+  { id:'mr-stories', manager:'Marathi', type:'Stories',          platforms:'Instagram (santoshjadhav.if + maativerse.if), Facebook', weekly:35, monthly:140, spread:'daily', status:'active', note:'5 per day across both IG accounts' },
+];
+
+function loadConfig(){
+  try{
+    const raw = localStorage.getItem(CONFIG_KEY);
+    if (raw){
+      const c = JSON.parse(raw);
+      if (!Array.isArray(c.rules) || !c.rules.length) c.rules = structuredClone(DEFAULT_RULES);
+      if (!c.sheetId) c.sheetId = DEFAULT_SHEET_ID;
+      return c;
+    }
+  }catch(e){ console.warn('config load failed, using defaults', e); }
+  return { sheetId: DEFAULT_SHEET_ID, rules: structuredClone(DEFAULT_RULES) };
+}
+function saveConfig(c){
+  try{ localStorage.setItem(CONFIG_KEY, JSON.stringify(c)); return true; }
+  catch(e){ console.error('config save failed', e); return false; }
+}
+let CFG = loadConfig();
+function currentSheetId(){ return CFG.sheetId || DEFAULT_SHEET_ID; }
 
 /* Month tabs are discovered automatically from the spreadsheet, so a new tab
    added each month shows up here on its own. The list below is only a fallback
@@ -519,7 +699,7 @@ const MONTH_NAMES = ["january","february","march","april","may","june",
 
 /* Reads the sheet's own tab list (name + gid) so new months appear by themselves. */
 async function discoverMonths(){
-  const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/htmlview`, { cache:'no-store' });
+  const res = await fetch(`https://docs.google.com/spreadsheets/d/${currentSheetId()}/htmlview?_=${Date.now()}`, { cache:'no-store' });
   if (!res.ok) throw new Error('tab discovery failed');
   const html = await res.text();
   const re = /name:\s*"((?:[^"\\]|\\.)*)"[\s\S]{0,400}?gid:\s*"(\d+)"/g;
@@ -549,9 +729,9 @@ const BRAND_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAxkAAACKCAYAAA
 /* Social media managers. Drop a photo path/URL into `photo` when ready. */
 const MANAGERS = [
   { id:"bhavika", name:"Bhavika", role:"Hindi Channel Lead", photo:"",
-    channels:["Hindi"], theme:"blue" },
+    channels:["Hindi"], theme:"blue", ruleScope:"Hindi" },
   { id:"aditi", name:"Aditi", role:"Marathi Channels Lead", photo:"",
-    channels:["Marathi (Santoshjadhav.if)","Marathi Maativerse"], theme:"green" },
+    channels:["Marathi (Santoshjadhav.if)","Marathi Maativerse"], theme:"green", ruleScope:"Marathi" },
 ];
 
 const CHANNEL_META = {
@@ -605,6 +785,8 @@ const P = {
   whatsapp:'M3 21l1.6-4.6A8.6 8.6 0 1 1 8.1 19.6L3 21Z',
   stories:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z',
   video:'M22.5 7.8v8.4L16.8 13V11l5.7-3.2ZM3.5 5.5h11.3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3.5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z',
+  trash:'M4 7h16M9 4h6a1 1 0 0 1 1 1v2H8V5a1 1 0 0 1 1-1ZM6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13M10 11v6M14 11v6',
+  close:'M18 6 6 18M6 6l12 12',
 };
 function ic(name, cls){ return `<svg class="i ${cls||''}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[name]||P.spark}"/></svg>`; }
 
@@ -618,7 +800,7 @@ const PLATFORM_ICON = {
 /* ============================================================
    3. Sheet parsing (verified against the live tracker)
    ============================================================ */
-function csvUrl(gid){ return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${gid}`; }
+function csvUrl(gid){ return `https://docs.google.com/spreadsheets/d/${currentSheetId()}/export?format=csv&gid=${gid}&_=${Date.now()}`; }
 
 function parseCSV(text){
   const rows=[]; let row=[], field="", q=false;
@@ -912,6 +1094,56 @@ function aggregate(list){
   out.rate = out.committed ? Math.round(out.closedDone/out.committed*1000)/10 : null;
   out.monthProgress = out.planned ? Math.round(out.posted/out.planned*1000)/10 : 0;
   return out;
+}
+
+/* ============================================================
+   4b. Editorial rule targets
+   The checklist tells us what actually got posted. It never told us what the
+   plan was, months just had however many columns happened to exist. The
+   rules above are the real fixed weekly/monthly plan per manager, entered
+   once in the admin panel, so "planned" can mean something real instead of
+   "however many boxes are on the sheet".
+   ============================================================ */
+function activeRules(manager){ return CFG.rules.filter(r => r.manager === manager && r.status === 'active'); }
+function heldRules(manager){ return CFG.rules.filter(r => r.manager === manager && r.status === 'hold'); }
+
+function weeklyRuleTarget(manager){
+  return activeRules(manager).reduce((a,r) => a + (r.weekly || 0), 0);
+}
+
+/* How much of the month's plan has actually come due, split by whether a
+   quota runs Monday-Friday only or every day of the week (stories). */
+function monthDayCounts(monthMeta){
+  const year = yearFor(monthMeta.num);
+  const totalDays = new Date(year, monthMeta.num, 0).getDate();
+  const now = new Date(); now.setHours(0,0,0,0);
+  const isCurrent = monthMeta.num === now.getMonth()+1 && year === now.getFullYear();
+  const isPast = !isCurrent && new Date(year, monthMeta.num-1, 1) < now;
+  let totalWeekdays=0, closedWeekdays=0, closedCalendarDays=0;
+  for (let d=1; d<=totalDays; d++){
+    const dt = new Date(year, monthMeta.num-1, d);
+    const isWeekday = dt.getDay() !== 0 && dt.getDay() !== 6;
+    if (isWeekday) totalWeekdays++;
+    const closed = isPast ? true : (isCurrent ? dt < now : false);
+    if (closed){ closedCalendarDays++; if (isWeekday) closedWeekdays++; }
+  }
+  return { totalDays, totalWeekdays, closedWeekdays, closedCalendarDays, isCurrent, isPast };
+}
+
+/* Monthly target prorated down to "what should be done by today", per rule,
+   then summed. Weekday quotas prorate against weekdays elapsed; daily quotas
+   (stories) prorate against calendar days elapsed. */
+function monthlyRuleTarget(manager, monthMeta){
+  const dc = monthDayCounts(monthMeta);
+  let monthly=0, committed=0;
+  activeRules(manager).forEach(r => {
+    monthly += r.monthly;
+    const frac = r.spread === 'daily'
+      ? (dc.totalDays ? dc.closedCalendarDays/dc.totalDays : 0)
+      : (dc.totalWeekdays ? dc.closedWeekdays/dc.totalWeekdays : 0);
+    committed += r.monthly * frac;
+  });
+  return { monthly: Math.round(monthly), committed: Math.round(committed) };
 }
 
 /* Week math. The Tuesday review covers the last completed Monday to Sunday. */
@@ -1240,6 +1472,14 @@ function renderWeekly(){
             </div>`;
           }).join('')}
         </div>
+        <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
+          ${MANAGERS.map(m => {
+            const target = weeklyRuleTarget(m.ruleScope);
+            if (!target) return '';
+            return `<span class="tag" style="color:var(--ink-2); background:var(--card-2);" data-tip="${esc('<div class=\'tip-t\'>Editorial plan, for reference</div><div class=\'tip-s\'>The agreed weekly volume of content pieces from the admin panel. Not compared against the count on the left, that counts platforms touched per day, a different unit.</div>')}" tabindex="0">
+              ${ic('target')} ${m.name}'s plan: ${fmt(target)}/week</span>`;
+          }).join('')}
+        </div>
       </div>
       <div>
         ${ring(wk.rate ?? 0, 128, 11, 'url(#gr-brand)', (wk.rate === null ? '--' : wk.rate + '%'), 'week rate')}
@@ -1260,6 +1500,44 @@ function renderWeekly(){
     </div>`;
   countUp(document.getElementById('week-big'), wk.posted, 1200);
   animateRings(document.getElementById('weekly'));
+}
+
+/* The real weekly/monthly plan, straight from the admin panel's rules. Shown
+   on its own, not measured against the checklist: the sheet only records
+   which platform got touched each day, never which of these content types
+   it was, so the two are different units and should not be forced together. */
+function renderEditorialPlan(){
+  const monthMeta = MONTHS[STATE.monthIndex];
+  document.getElementById('editorial-plan').innerHTML = MANAGERS.map((m,i) => {
+    const rows = CFG.rules.filter(r => r.manager === m.ruleScope);
+    const color = THEME_COLOR[m.theme];
+    const wk = weeklyRuleTarget(m.ruleScope);
+    const mo = monthlyRuleTarget(m.ruleScope, monthMeta).monthly;
+    const held = rows.filter(r => r.status === 'hold');
+    return `<div class="card card-pad hoverable fade-up" style="animation-delay:${i*70}ms">
+      <div class="chan-strip" style="background:linear-gradient(90deg,${color},transparent);"></div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+        <h3 style="font-size:16px;">${m.name}<span style="color:var(--ink-3); font-weight:500;"> &middot; ${m.role}</span></h3>
+      </div>
+      <div style="display:flex; gap:18px; margin-bottom:14px;">
+        <div><span class="num" style="font-size:22px; font-weight:800;">${fmt(wk)}</span><span class="eyebrow"> /week</span></div>
+        <div><span class="num" style="font-size:22px; font-weight:800;">${fmt(mo)}</span><span class="eyebrow"> /month</span></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        ${rows.map(r => `<div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:6px 9px; border-radius:8px; background:var(--card-2); ${r.status==='hold'?'opacity:.6;':''}">
+          <div style="min-width:0;">
+            <div style="font-size:12.5px; font-weight:600; ${r.status==='hold'?'text-decoration:line-through;':''}">${escText(r.type)}</div>
+            <div style="font-size:10.5px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escText(r.platforms)}${r.note?' · '+escText(r.note):''}</div>
+          </div>
+          <div style="text-align:right; flex:none;">
+            <div class="eyebrow">${r.weekly!=null ? fmt(r.weekly)+'/wk' : '&mdash;'}</div>
+            <div class="eyebrow">${fmt(r.monthly)}/mo</div>
+          </div>
+        </div>`).join('')}
+      </div>
+      ${held.length ? `<div class="eyebrow" style="margin-top:10px; display:flex; align-items:center; gap:5px;">${ic('clock')} ${held.length} item${held.length>1?'s':''} on hold, not counted in the totals above</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 function renderKPIs(stats){
@@ -1360,6 +1638,9 @@ function renderManagers(stats){
     const mine = m.channels.map(c => byName[c]).filter(Boolean);
     if (!mine.length) return '';
     const agg = aggregate(mine);
+    const held = heldRules(m.ruleScope);
+    const planWeekly = weeklyRuleTarget(m.ruleScope);
+    const planMonthly = monthlyRuleTarget(m.ruleScope, MONTHS[STATE.monthIndex]).monthly;
     const xp = xpOf(agg), lvl = levelFor(xp);
     const color = THEME_COLOR[m.theme];
     const unlocked = ACHIEVEMENTS.filter(a => a.test(agg)).length;
@@ -1378,8 +1659,13 @@ function renderManagers(stats){
         </div>
         <div style="text-align:right;">
           <div class="num" style="font-size:26px; font-weight:800; letter-spacing:-0.04em; color:${color};">${agg.rate === null ? "--" : agg.rate+"%"}</div>
-          <div class="eyebrow">execution</div>
+          <div class="eyebrow">checklist completion</div>
         </div>
+      </div>
+      <div class="eyebrow" style="margin-top:2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <span data-tip="${esc('<div class=\'tip-t\'>Editorial plan, for reference</div><div class=\'tip-s\'>Set in the admin panel. This is the agreed volume of content pieces, not measured against the checklist above since the sheet tracks platforms touched per day, not content types.</div>')}" tabindex="0" style="border-bottom:1px dotted var(--ink-4); cursor:help;">
+          editorial plan: ${fmt(planWeekly)}/week &middot; ${fmt(planMonthly)}/month</span>
+        ${held.length ? `<span class="tag" style="color:var(--ink-3); background:var(--card-2);">${ic('clock')} ${held.length} on hold</span>` : ''}
       </div>
 
       <div style="margin:16px 0 6px; display:flex; justify-content:space-between; align-items:baseline;">
@@ -1670,10 +1956,11 @@ function renderAll(){
     document.getElementById('managers').innerHTML = '';
     document.getElementById('channels').innerHTML = '';
     document.getElementById('harvest').innerHTML = '';
+    renderEditorialPlan();
     renderTrend();
     return;
   }
-  renderWeekly(); renderKPIs(stats); renderHarvest(stats); renderManagers(stats);
+  renderWeekly(); renderEditorialPlan(); renderKPIs(stats); renderHarvest(stats); renderManagers(stats);
   renderChannels(stats); renderPlatforms(stats); renderLeaderboard(stats); renderTrend();
   maybeCelebrate(stats);
 }
@@ -1783,6 +2070,160 @@ function runDemo(){
 }
 document.getElementById('demo-btn').onclick = runDemo;
 if (new URLSearchParams(location.search).has('demo')) setTimeout(runDemo, 1200);
+
+/* ============================================================
+   10. Admin panel
+   ============================================================ */
+document.getElementById('admin-btn').innerHTML = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/>
+  <path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V19.6a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.04H2.4a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.05 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H8.5A1.7 1.7 0 0 0 9.5 3V2.9a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V8.5a1.7 1.7 0 0 0 1.56 1.04h.09a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.04Z"/>
+</svg>`;
+
+const adminOverlay = document.getElementById('admin-overlay');
+function openAdmin(){
+  adminOverlay.hidden = false;
+  document.getElementById('sheet-url-input').value = currentSheetId();
+  document.getElementById('sheet-url-current').textContent = `Currently syncing: docs.google.com/spreadsheets/d/${currentSheetId()}`;
+  renderRulesEditor();
+}
+function closeAdmin(){ adminOverlay.hidden = true; }
+document.getElementById('admin-btn').onclick = openAdmin;
+document.getElementById('admin-close').innerHTML = ic('close');
+document.getElementById('admin-close').onclick = closeAdmin;
+adminOverlay.onclick = e => { if (e.target === adminOverlay) closeAdmin(); };
+
+document.querySelectorAll('.admin-tabs .seg').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.admin-tabs .seg').forEach(t => t.setAttribute('aria-selected', t===tab ? 'true':'false'));
+    document.querySelectorAll('#admin-body [data-panel]').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
+  };
+});
+
+/* Accepts a full Sheets URL or a bare ID and pulls the /d/{id}/ segment out. */
+function extractSheetId(input){
+  const t = (input||'').trim();
+  const m = t.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if (m) return m[1];
+  if (/^[a-zA-Z0-9-_]{20,}$/.test(t)) return t;
+  return null;
+}
+document.getElementById('sheet-url-save').onclick = async () => {
+  const id = extractSheetId(document.getElementById('sheet-url-input').value);
+  if (!id){ toast('That does not look like a Google Sheets link or ID.', false); return; }
+  CFG.sheetId = id;
+  saveConfig(CFG);
+  document.getElementById('sheet-url-current').textContent = `Currently syncing: docs.google.com/spreadsheets/d/${id}`;
+  toast('Sheet source updated — syncing now');
+  closeAdmin();
+  await loadAll(true);
+};
+
+document.getElementById('hard-refresh-btn').onclick = async () => {
+  STATE.months = {}; STATE.dayIndex = {}; STATE.celebrated = {};
+  MONTHS = FALLBACK_MONTHS.slice();
+  toast('Hard refresh started — re-reading every tab');
+  closeAdmin();
+  await loadAll(true);
+};
+
+/* ---------- Rules editor ---------- */
+function ruleRowHTML(r){
+  return `<div class="rule-row ${r.status==='hold'?'is-hold':''}" data-id="${esc(r.id)}">
+    <input type="text" data-f="type" value="${esc(r.type)}" placeholder="Content type">
+    <input type="text" data-f="platforms" value="${esc(r.platforms)}" placeholder="Platforms">
+    <input type="number" min="0" data-f="weekly" value="${r.weekly ?? ''}" placeholder="—">
+    <input type="number" min="0" data-f="monthly" value="${r.monthly ?? 0}">
+    <select data-f="status">
+      <option value="active" ${r.status==='active'?'selected':''}>Active</option>
+      <option value="hold" ${r.status==='hold'?'selected':''}>On hold</option>
+    </select>
+    <button class="rule-del" data-del="${esc(r.id)}" title="Remove rule" aria-label="Remove rule">${ic('trash')}</button>
+  </div>`;
+}
+function renderRulesEditor(){
+  const groups = ['Hindi','Marathi'];
+  document.getElementById('rules-groups').innerHTML = groups.map(g => {
+    const rows = CFG.rules.filter(r => r.manager === g);
+    const mgr = MANAGERS.find(m => m.ruleScope === g);
+    const wk = rows.filter(r=>r.status==='active').reduce((a,r)=>a+(r.weekly||0),0);
+    const mo = rows.filter(r=>r.status==='active').reduce((a,r)=>a+(r.monthly||0),0);
+    return `<div class="rule-group" data-group="${g}">
+      <div class="rule-group-head">
+        <h4>${g}${mgr ? ' · '+mgr.name : ''}</h4>
+        <span class="eyebrow">${fmt(wk)}/week active · ${fmt(mo)}/month active</span>
+      </div>
+      <div class="rule-row-labels">
+        <span>Content type</span><span>Platforms</span><span>Weekly</span><span>Monthly</span><span>Status</span><span></span>
+      </div>
+      <div class="rule-table">${rows.map(ruleRowHTML).join('')}</div>
+      <button class="btn add-rule-here" data-group="${g}" style="margin-top:8px; font-size:11.5px; padding:6px 11px;">+ Add to ${g}</button>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('#rules-groups .rule-row').forEach(row => {
+    const id = row.dataset.id;
+    row.querySelectorAll('input,select').forEach(input => {
+      input.addEventListener('change', () => {
+        const rule = CFG.rules.find(r => r.id === id);
+        if (!rule) return;
+        const field = input.dataset.f;
+        if (field === 'weekly' || field === 'monthly'){
+          rule[field] = input.value === '' ? null : Math.max(0, parseInt(input.value,10) || 0);
+        } else {
+          rule[field] = input.value;
+        }
+        saveConfig(CFG);
+        renderRulesEditor();
+        renderAll();
+      });
+    });
+  });
+  document.querySelectorAll('.rule-del').forEach(btn => {
+    btn.onclick = () => {
+      CFG.rules = CFG.rules.filter(r => r.id !== btn.dataset.del);
+      saveConfig(CFG); renderRulesEditor(); renderAll();
+    };
+  });
+  document.querySelectorAll('.add-rule-here').forEach(btn => {
+    btn.onclick = () => {
+      const g = btn.dataset.group;
+      CFG.rules.push({ id:'r'+Date.now(), manager:g, type:'New content type', platforms:'',
+                        weekly:1, monthly:4, spread:'weekday', status:'active', note:'' });
+      saveConfig(CFG); renderRulesEditor(); renderAll();
+    };
+  });
+}
+
+/* ---------- Backup & reset ---------- */
+document.getElementById('export-btn').onclick = () => {
+  const blob = new Blob([JSON.stringify(CFG, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'if-dashboard-config.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  toast('Config downloaded');
+};
+document.getElementById('import-btn').onclick = () => {
+  try{
+    const parsed = JSON.parse(document.getElementById('import-text').value);
+    if (!parsed.rules || !Array.isArray(parsed.rules)) throw new Error('missing rules array');
+    CFG = { sheetId: parsed.sheetId || DEFAULT_SHEET_ID, rules: parsed.rules };
+    saveConfig(CFG);
+    toast('Config imported');
+    document.getElementById('sheet-url-input').value = currentSheetId();
+    renderRulesEditor();
+    loadAll(true);
+  }catch(e){ toast('That JSON did not parse as a valid config.', false); }
+};
+document.getElementById('reset-btn').onclick = () => {
+  CFG = { sheetId: DEFAULT_SHEET_ID, rules: structuredClone(DEFAULT_RULES) };
+  saveConfig(CFG);
+  toast('Reset to defaults');
+  document.getElementById('sheet-url-input').value = currentSheetId();
+  renderRulesEditor();
+  loadAll(true);
+};
 
 document.getElementById('refresh-btn').onclick = () => loadAll(true);
 loadAll();
