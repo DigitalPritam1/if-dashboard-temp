@@ -131,10 +131,14 @@ h1,h2,h3{ letter-spacing:-0.028em; font-weight:700; line-height:1.15; }
 .iconbtn:hover{ color:var(--ink); border-color:var(--line-2); transform:translateY(-1px); box-shadow:var(--shadow); }
 .iconbtn:active{ transform:translateY(0); }
 
-/* ---------- Sync button ---------- */
-.sync-btn{
+/* ---------- Sync button ----------
+   #refresh-btn (id, not just .sync-btn) so these always beat the generic
+   .btn padding regardless of source order — that mismatch was why the icon
+   sat off-centre once the label hid on mobile. */
+#refresh-btn.sync-btn{
   height:34px; padding:0 14px; gap:8px; font-size:12.5px;
   background:var(--card); border-color:var(--line);
+  justify-content:center;
 }
 .sync-btn:hover{ border-color:var(--line-2); }
 .sync-btn:disabled{ cursor:default; opacity:.75; transform:none; box-shadow:none; }
@@ -146,7 +150,7 @@ h1,h2,h3{ letter-spacing:-0.028em; font-weight:700; line-height:1.15; }
 .sync-btn.sync-error{ border-color:color-mix(in srgb, var(--coral) 45%, transparent); background:var(--coral-soft); }
 .sync-btn.sync-error .sync-ic{ color:var(--coral); }
 @keyframes spin{ to{ transform:rotate(360deg); } }
-@media (max-width:760px){ .sync-label{ display:none; } .sync-btn{ width:34px; padding:0; } }
+@media (max-width:760px){ .sync-label{ display:none; } #refresh-btn.sync-btn{ width:34px; padding:0; gap:0; } }
 
 .segbar{ display:inline-flex; padding:3px; gap:2px; border-radius:11px; background:var(--paper-2); border:1px solid var(--line); }
 .seg{
@@ -273,6 +277,14 @@ h1,h2,h3{ letter-spacing:-0.028em; font-weight:700; line-height:1.15; }
 .admin-tabs{ margin-bottom:18px; align-self:flex-start; }
 .admin-body{ overflow-y:auto; padding-right:4px; flex:1; }
 .admin-body [data-panel][hidden]{ display:none; }
+/* Three tabs need to fit without scrolling — a strip a thumb can't see the
+   end of is effectively two tabs, not three. Stretch to fill the card and
+   let each tab shrink evenly instead of overflowing. */
+@media (max-width:600px){
+  .admin-card{ padding:18px; }
+  .admin-tabs{ align-self:stretch; width:100%; justify-content:space-between; overflow-x:visible; }
+  .admin-tabs .seg{ flex:1; padding:7px 4px; font-size:9.5px; letter-spacing:.03em; text-align:center; }
+}
 .admin-divider{ height:1px; background:var(--line); margin:18px 0; }
 
 .field-label{ display:block; font-size:12px; font-weight:650; margin-bottom:7px; }
