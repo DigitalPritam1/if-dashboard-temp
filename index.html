@@ -155,7 +155,7 @@ h1,h2,h3{ letter-spacing:-0.028em; font-weight:700; line-height:1.15; }
 .segbar{ display:inline-flex; padding:3px; gap:2px; border-radius:11px; background:var(--paper-2); border:1px solid var(--line); }
 .seg{
   appearance:none; border:0; background:transparent; cursor:pointer; color:var(--ink-3);
-  font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
+  font-family:inherit; font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
   padding:6px 12px; border-radius:8px; transition:.18s ease;
 }
 .seg:hover{ color:var(--ink); }
@@ -273,9 +273,16 @@ h1,h2,h3{ letter-spacing:-0.028em; font-weight:700; line-height:1.15; }
   width:min(760px, 94vw); max-height:min(720px, 88vh); display:flex; flex-direction:column;
   padding:24px; text-align:left; animation:rise .4s cubic-bezier(.2,.9,.25,1);
 }
-.admin-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px; }
-.admin-tabs{ margin-bottom:18px; align-self:flex-start; }
-.admin-body{ overflow-y:auto; padding-right:4px; flex:1; }
+/* .admin-card is a flex column: header, tabs, scrolling body. Without
+   flex-shrink:0 on the first two, a tall panel (Editorial rules with many
+   rows) makes the flexbox shrink ALL three instead of just scrolling the
+   body — that's what was crushing the tab bar down to a sliver and making
+   the tab labels look like they overlapped. min-height:0 on the body is the
+   companion fix: a flex:1 child defaults to min-height:auto (content-sized),
+   which silently blocks its own overflow-y:auto from ever engaging. */
+.admin-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:16px; flex-shrink:0; }
+.admin-tabs{ margin-bottom:18px; align-self:flex-start; flex-shrink:0; }
+.admin-body{ overflow-y:auto; padding-right:4px; flex:1; min-height:0; }
 .admin-body [data-panel][hidden]{ display:none; }
 /* Three tabs need to fit without scrolling — a strip a thumb can't see the
    end of is effectively two tabs, not three. Stretch to fill the card and
