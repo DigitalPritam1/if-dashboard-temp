@@ -1,86 +1,3 @@
-function renderWeekly(){
-  const now = new Date();
-  const { start, end } = lastCompleteWeek(now);
-  const prevStart = new Date(start); prevStart.setDate(prevStart.getDate()-7);
-  const prevEnd = new Date(end); prevEnd.setDate(prevEnd.getDate()-7);
-  const brands = Object.keys(CHANNEL_META);
-  const wk = rangeStats(start, end, brands);
-  const pv = rangeStats(prevStart, prevEnd, brands);
-  const delta = pv.posted ? Math.round((wk.posted - pv.posted)/pv.posted*1000)/10 : null;
-
-  const meet = nextMeeting(now);
-  const diff = meet - now;
-  const dd = Math.floor(diff/864e5), hh = Math.floor(diff%864e5/36e5), mm = Math.floor(diff%36e5/6e4);
-  const isMeetingDay = now.getDay() === 2;
-  const dfmt = d => d.toLocaleDateString('en-IN',{ day:'numeric', month:'short' });
-
-  const up = delta !== null && delta >= 0;
-  const chip = delta === null ? '' :
-    `<span class="trendchip" style="background:${up?'var(--green-soft)':'var(--coral-soft)'}; color:${up?'var(--green)':'var(--coral)'};">
-      ${ic(up?'up':'down')} ${Math.abs(delta)}% vs previous week</span>`;
-
-  document.getElementById('weekly').innerHTML = `
-    <div class="card weekhero fade-up">
-      <div>
-        <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;">
-          <span class="tag" style="color:var(--blue); border-color:color-mix(in srgb,var(--blue) 40%,transparent); background:var(--blue-soft);">
-            ${ic('calendar')} Weekly review</span>
-          ${isMeetingDay ? `<span class="tag" style="color:var(--green); background:var(--green-soft); border-color:color-mix(in srgb,var(--green) 40%,transparent);">${ic('users')} Meeting day</span>` : ''}
-        </div>
-        <div class="eyebrow" style="margin-bottom:8px;">Monday ${dfmt(start)} to Sunday ${dfmt(end)}</div>
-        <div class="week-headline">
-          <div class="bignum num" id="week-big">0</div>
-          <div class="week-headline-txt">
-            <div style="font-size:14px; font-weight:650; margin-bottom:6px;">content pieces published</div>
-            <div class="eyebrow" style="margin-bottom:7px;">${wk.missed ? fmt(wk.missed)+' missed on working days' : 'no working day misses'}${wk.weekendDone ? ' · '+fmt(wk.weekendDone)+' weekend extras' : ''}</div>
-            ${chip}
-          </div>
-        </div>
-        <div style="display:flex; gap:20px; margin-top:20px; flex-wrap:wrap;">
-          ${brands.map(b => {
-            const m = CHANNEL_META[b], s = wk.perBrand[b];
-            return `<div style="min-width:118px;">
-              <div class="eyebrow" style="color:${THEME_COLOR[m.theme]}; margin-bottom:5px;">${m.short}</div>
-              <div style="display:flex; align-items:baseline; gap:6px;">
-                <span class="num" style="font-size:22px; font-weight:800; letter-spacing:-0.04em;">${fmt(s.posted)}</span>
-                <span style="font-size:11.5px; color:var(--ink-3);">${s.missed ? fmt(s.missed)+" missed" : "on plan"}</span>
-              </div>
-              <div class="bar-track" style="margin-top:6px; height:5px;">
-                <div class="bar-fill" style="width:${s.committed ? (s.done/s.committed*100) : 0}%; background:${THEME_COLOR[m.theme]};"></div>
-              </div>
-            </div>`;
-          }).join('')}
-        </div>
-        <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
-          ${MANAGERS.map(m => {
-            const target = weeklyRuleTarget(m.ruleScope);
-            if (!target) return '';
-            return `<span class="tag" style="color:var(--ink-2); background:var(--card-2);" data-tip="${esc('<div class=\'tip-t\'>Editorial plan, for reference</div><div class=\'tip-s\'>The agreed weekly volume of content pieces from the admin panel. Not compared against the count on the left, that counts platforms touched per day, a different unit.</div>')}" tabindex="0">
-              ${ic('target')} ${m.name}'s plan: ${fmt(target)}/week</span>`;
-          }).join('')}
-        </div>
-      </div>
-      <div>
-        ${ring(wk.rate ?? 0, 128, 11, 'url(#gr-brand)', (wk.rate === null ? '--' : wk.rate + '%'), 'week rate')}
-        <div class="meeting" style="margin-top:18px;">
-          <div style="display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:650;">
-            ${ic('clock')} Next review meeting
-          </div>
-          <div style="font-size:12px; color:var(--ink-3); margin-top:3px;">
-            ${meet.toLocaleDateString('en-IN',{ weekday:'long', day:'numeric', month:'long' })} at 10:00 AM
-          </div>
-          <div class="cdgrid">
-            <div class="cd"><b class="num">${dd}</b><span>days</span></div>
-            <div class="cd"><b class="num">${hh}</b><span>hrs</span></div>
-            <div class="cd"><b class="num">${mm}</b><span>min</span></div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  countUp(document.getElementById('week-big'), wk.posted, 1200);
-  animateRings(document.getElementById('weekly'));
-}
-
 /* The real weekly/monthly plan, straight from the admin panel's rules. Shown
    on its own, not measured against the checklist: the sheet only records
    which platform got touched each day, never which of these content types
@@ -490,7 +407,7 @@ function renderAll(){
     renderTrend();
     return;
   }
-  renderWeekly(); renderKPIs(stats); renderHarvest(stats); renderManagers(stats);
+  renderOverviewHero(); renderKPIs(stats); renderHarvest(stats); renderManagers(stats);
   renderChannels(stats); renderPlatforms(stats); renderLeaderboard(stats); renderTrend();
   maybeCelebrate(stats);
 }

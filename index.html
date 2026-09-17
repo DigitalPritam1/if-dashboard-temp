@@ -73,7 +73,14 @@
 
   <main id="main" hidden>
     <div id="sec-weekly">
-      <section id="weekly" style="margin-top:16px;"></section>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:16px;">
+        <span class="eyebrow">Review period</span>
+        <div class="segbar" id="hero-mode" role="tablist">
+          <button class="seg" data-mode="weekly" aria-selected="true">Weekly</button>
+          <button class="seg" data-mode="monthly" aria-selected="false">Monthly</button>
+        </div>
+      </div>
+      <section id="weekly" style="margin-top:10px;"></section>
     </div>
 
     <div id="sec-kpis">
