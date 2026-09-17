@@ -77,6 +77,13 @@
 
     <div id="main" hidden>
       <div class="deck-panel" data-panel="overview">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;">
+          <span class="eyebrow">Review period</span>
+          <div class="segbar" id="hero-mode" role="tablist">
+            <button class="seg" data-mode="weekly" aria-selected="true">Weekly</button>
+            <button class="seg" data-mode="monthly" aria-selected="false">Monthly</button>
+          </div>
+        </div>
         <section id="weekly"></section>
         <div class="section-head"><h2>This month at a glance</h2><span class="eyebrow" id="month-label"></span></div>
         <section id="kpis" class="grid g4"></section>
@@ -131,6 +138,7 @@
 <script src="js/core.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/plan-embed.js"></script>
+<script src="js/concept.js"></script>
 <script>
   // Sidebar panel switching — client-side only, no navigation.
   document.querySelectorAll('.deck-link[data-panel]').forEach(link => {
@@ -144,7 +152,7 @@
   // initPage(). Wrap it so the Plan panel refreshes on the same data tick,
   // without re-triggering a second sync loop.
   const _baseOnLoaded = window.onDataLoaded;
-  window.onDataLoaded = () => { _baseOnLoaded(); renderPlanPage(); };
+  window.onDataLoaded = () => { _baseOnLoaded(); renderPlanPage(); renderOverviewHero(); };
   window.onMonthChange = window.onDataLoaded;
 </script>
 </body>
