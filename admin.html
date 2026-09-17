@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  Designer: Pritam Sonone
+  Website:  https://www.digitalpritam.in
+  Email:    contact@digitalpritam.in
+  Project:  SMM Distribution Dashboard - Indian Farmer
+  Created:  2026-09-10
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Farmer · Settings</title>
+<meta name="designer" content="Pritam Sonone" data-website="https://www.digitalpritam.in" data-email="contact@digitalpritam.in" data-project="SMM Distribution Dashboard - Indian Farmer" data-created="2026-09-10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true" focusable="false">
+  <metadata><desc>Designer: Pritam Sonone. Website: https://www.digitalpritam.in. Email: contact@digitalpritam.in.</desc></metadata>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brandmark">
+      <div class="logo-slot" id="logo-slot"></div>
+      <div class="logo-div"></div>
+      <div class="brand-sub"><b>Distribution Command</b>Social media control room</div>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="plan.html">Plan</a>
+      <a href="admin.html" aria-current="page">Settings</a>
+    </nav>
+    <div class="spacer"></div>
+    <span class="pill" id="today-pill"></span>
+    <span class="pill live" id="live-pill"><span class="dot"></span><span id="live-txt">Syncing</span></span>
+    <button class="iconbtn" id="theme-btn" title="Switch theme" aria-label="Switch theme"></button>
+    <button class="btn sync-btn" id="refresh-btn" aria-label="Sync sheet now">
+      <span class="sync-ic"></span><span class="sync-label">Sync sheet</span>
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div style="padding:22px 0 4px;">
+    <div class="eyebrow" style="margin-bottom:5px;">Admin</div>
+    <h1 style="font-size:24px;">Settings</h1>
+    <p style="color:var(--ink-2); font-size:13.5px; margin-top:6px;">Saved in this browser only · the sheet itself never changes</p>
+  </div>
+
+  <div class="settings-shell" style="margin-top:22px;">
+    <nav class="settings-nav" role="tablist">
+      <button data-tab="source" aria-selected="true">Data source</button>
+      <button data-tab="rules" aria-selected="false">Editorial rules</button>
+      <button data-tab="layout" aria-selected="false">Layout</button>
+      <button data-tab="data" aria-selected="false">Backup &amp; reset</button>
+    </nav>
+
+    <div>
+      <!-- Data source -->
+      <section class="card card-pad settings-panel" data-panel="source">
+        <label class="field-label">Google Sheet URL or ID</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="text" id="sheet-url-input" class="field-input" placeholder="Paste the full Google Sheets link, or just the sheet ID">
+          <button class="btn primary" id="sheet-url-save">Save &amp; sync</button>
+        </div>
+        <p class="field-hint" id="sheet-url-current"></p>
+        <div class="admin-divider"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:650; font-size:13.5px;">Hard refresh</div>
+            <p class="field-hint" style="margin-top:2px;">Re-discovers every month tab and re-fetches every row from scratch, bypassing anything cached.</p>
+          </div>
+          <button class="btn" id="hard-refresh-btn">Hard refresh</button>
+        </div>
+      </section>
+
+      <!-- Rules -->
+      <section class="card card-pad settings-panel" data-panel="rules" hidden>
+        <p class="field-hint" style="margin-bottom:12px;">The sheet only records what got posted, never what the plan was. These are the real weekly/monthly quotas per manager. Editing them changes every target and progress number on the Plan page immediately.</p>
+        <div id="rules-groups"></div>
+      </section>
+
+      <!-- Layout -->
+      <section class="card card-pad settings-panel" data-panel="layout" hidden>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
+          <p class="field-hint" style="margin:0; max-width:56ch;">Turn sections on or off for the Dashboard page. Nothing here deletes anything — a hidden section keeps working in the background, it just stays off screen until you turn it back on.</p>
+          <button class="btn" id="visibility-reset" style="font-size:11.5px; padding:7px 12px; flex:none;">Reset to default view</button>
+        </div>
+        <div id="visibility-groups" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </section>
+
+      <!-- Backup & reset -->
+      <section class="card card-pad settings-panel" data-panel="data" hidden>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+          <div>
+            <div style="font-weight:650; font-size:13.5px;">Export configuration</div>
+            <p class="field-hint" style="margin-top:2px;">Download the sheet source, every rule and the layout as one JSON file, so you can back it up or move it to another browser.</p>
+          </div>
+          <button class="btn" id="export-btn">Export JSON</button>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-weight:650; font-size:13.5px; margin-bottom:6px;">Import configuration</div>
+          <textarea id="import-text" class="field-input" style="width:100%; min-height:90px; font-family:'JetBrains Mono',monospace; font-size:11.5px;" placeholder="Paste an exported JSON config here"></textarea>
+          <button class="btn" id="import-btn" style="margin-top:8px;">Load this JSON</button>
+        </div>
+        <div class="admin-divider"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:650; font-size:13.5px; color:var(--coral);">Reset to defaults</div>
+            <p class="field-hint" style="margin-top:2px;">Restores the original sheet ID, the seeded rules and the default layout. Cannot be undone.</p>
+          </div>
+          <button class="btn" id="reset-btn" style="border-color:color-mix(in srgb,var(--coral) 40%,transparent); color:var(--coral);">Reset everything</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.settings-nav button').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.settings-nav button').forEach(t => t.setAttribute('aria-selected', t===tab ? 'true':'false'));
+    document.querySelectorAll('.settings-panel').forEach(p => { p.hidden = p.dataset.panel !== tab.dataset.tab; });
+  };
+});
+</script>
+<script src="js/core.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

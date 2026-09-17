@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  Designer: Pritam Sonone
+  Website:  https://www.digitalpritam.in
+  Email:    contact@digitalpritam.in
+  Project:  SMM Distribution Dashboard - Indian Farmer
+  Created:  2026-09-10
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Farmer · Editorial Plan</title>
+<meta name="designer" content="Pritam Sonone" data-website="https://www.digitalpritam.in" data-email="contact@digitalpritam.in" data-project="SMM Distribution Dashboard - Indian Farmer" data-created="2026-09-10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true" focusable="false">
+  <metadata><desc>Designer: Pritam Sonone. Website: https://www.digitalpritam.in. Email: contact@digitalpritam.in.</desc></metadata>
+  <defs>
+    <linearGradient id="gr-blue"   x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3E62F0"/><stop offset="100%" stop-color="#1437BE"/></linearGradient>
+    <linearGradient id="gr-green"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E551"/><stop offset="100%" stop-color="#00A63B"/></linearGradient>
+    <linearGradient id="gr-violet" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8A6DFF"/><stop offset="100%" stop-color="#4429D1"/></linearGradient>
+    <linearGradient id="gr-coral"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF6B8E"/><stop offset="100%" stop-color="#D11E48"/></linearGradient>
+    <linearGradient id="gr-amber"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFC24D"/><stop offset="100%" stop-color="#E08700"/></linearGradient>
+    <linearGradient id="gr-brand"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1437BE"/><stop offset="100%" stop-color="#00E551"/></linearGradient>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brandmark">
+      <div class="logo-slot" id="logo-slot"></div>
+      <div class="logo-div"></div>
+      <div class="brand-sub"><b>Distribution Command</b>Social media control room</div>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="plan.html" aria-current="page">Plan</a>
+      <a href="admin.html">Settings</a>
+    </nav>
+    <div class="spacer"></div>
+    <span class="pill" id="today-pill"></span>
+    <span class="pill live" id="live-pill"><span class="dot"></span><span id="live-txt">Syncing</span></span>
+    <button class="iconbtn" id="theme-btn" title="Switch theme" aria-label="Switch theme"></button>
+    <button class="btn sync-btn" id="refresh-btn" aria-label="Sync sheet now">
+      <span class="sync-ic"></span><span class="sync-label">Sync sheet</span>
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div style="padding:22px 0 4px;">
+    <div class="eyebrow" style="margin-bottom:5px;">Editorial plan</div>
+    <h1 style="font-size:24px;">The real agreed volume</h1>
+    <p style="color:var(--ink-2); font-size:13.5px; max-width:64ch; margin-top:6px;">
+      The daily checklist only records which platform got touched. It was never the plan, so it can't be measured against
+      one. This page is the actual weekly and monthly content quota the team agreed to, editable any time from
+      <a href="admin.html" style="color:var(--blue);">Settings → Editorial rules</a>.
+    </p>
+  </div>
+
+  <div id="boot" class="grid g2" style="margin-top:20px;">
+    <div class="skel" style="height:340px"></div><div class="skel" style="height:340px"></div>
+  </div>
+
+  <main id="main" hidden>
+    <section id="plan-managers" class="grid g2" style="margin-top:20px;"></section>
+
+    <div class="section-head"><h2>Every quota, one table</h2><span class="eyebrow">Both managers combined</span></div>
+    <section id="plan-table"></section>
+  </main>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/plan.js"></script>
+</body>
+</html>

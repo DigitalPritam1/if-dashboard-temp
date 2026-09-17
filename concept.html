@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  Designer: Pritam Sonone
+  Website:  https://www.digitalpritam.in
+  Email:    contact@digitalpritam.in
+  Project:  SMM Distribution Dashboard - Indian Farmer (Command Deck concept)
+  Created:  2026-09-17
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Farmer · Command Deck</title>
+<meta name="designer" content="Pritam Sonone" data-website="https://www.digitalpritam.in" data-email="contact@digitalpritam.in" data-project="SMM Distribution Dashboard - Indian Farmer" data-created="2026-09-17">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<style>
+  /* This concept trades the long scroll for a fixed sidebar and one focused
+     panel at a time — same data, same brand colours, different shape. */
+  .wrap{ max-width:none; padding:0; }
+  body::before{ position:fixed; }
+</style>
+</head>
+<body>
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true" focusable="false">
+  <metadata><desc>Designer: Pritam Sonone. Website: https://www.digitalpritam.in. Email: contact@digitalpritam.in.</desc></metadata>
+  <defs>
+    <linearGradient id="gr-blue"   x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3E62F0"/><stop offset="100%" stop-color="#1437BE"/></linearGradient>
+    <linearGradient id="gr-green"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E551"/><stop offset="100%" stop-color="#00A63B"/></linearGradient>
+    <linearGradient id="gr-violet" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8A6DFF"/><stop offset="100%" stop-color="#4429D1"/></linearGradient>
+    <linearGradient id="gr-coral"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF6B8E"/><stop offset="100%" stop-color="#D11E48"/></linearGradient>
+    <linearGradient id="gr-amber"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFC24D"/><stop offset="100%" stop-color="#E08700"/></linearGradient>
+    <linearGradient id="gr-brand"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1437BE"/><stop offset="100%" stop-color="#00E551"/></linearGradient>
+  </defs>
+</svg>
+
+<div class="deck">
+  <aside class="deck-rail">
+    <div class="brandmark">
+      <div class="logo-slot" id="logo-slot"></div>
+    </div>
+    <a class="deck-link on" data-panel="overview"><svg class="i" viewBox="0 0 24 24"><path d="M12 2.5 2.5 7.5 12 12.5l9.5-5L12 2.5ZM2.5 16.5 12 21.5l9.5-5M2.5 12 12 17l9.5-5"/></svg>Overview</a>
+    <a class="deck-link" data-panel="managers"><svg class="i" viewBox="0 0 24 24"><path d="M16.5 20.5v-1.8a4 4 0 0 0-4-4h-5a4 4 0 0 0-4 4v1.8M10 11a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5ZM21.5 20.5v-1.8a4 4 0 0 0-3-3.9M16.5 3.7a4 4 0 0 1 0 7.3"/></svg>Managers</a>
+    <a class="deck-link" data-panel="channels"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>Channels</a>
+    <a class="deck-link" data-panel="spread"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Distribution</a>
+    <a class="deck-link" data-panel="plan"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>Plan</a>
+
+    <div class="deck-rail-foot">
+      <span class="pill live" id="live-pill" style="justify-content:center;"><span class="dot"></span><span id="live-txt">Syncing</span></span>
+      <button class="btn sync-btn" id="refresh-btn" style="justify-content:center;" aria-label="Sync sheet now">
+        <span class="sync-ic"></span><span class="sync-label">Sync sheet</span>
+      </button>
+      <div style="display:flex; gap:6px;">
+        <button class="iconbtn" id="theme-btn" style="flex:1;" title="Switch theme" aria-label="Switch theme"></button>
+        <a class="iconbtn" href="index.html" style="flex:1; text-decoration:none; display:grid; place-items:center;" title="Back to classic view" aria-label="Back to classic view">
+          <svg class="i" viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M3 12h18"/></svg>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <main class="deck-main">
+    <div class="deck-topline">
+      <div>
+        <div class="eyebrow" id="scope-note" style="margin-bottom:4px;"></div>
+        <div class="segbar" id="month-tabs" role="tablist"></div>
+      </div>
+      <span class="pill" id="today-pill"></span>
+    </div>
+
+    <div id="boot" class="grid g4">
+      <div class="skel" style="height:150px"></div><div class="skel" style="height:150px"></div>
+      <div class="skel" style="height:150px"></div><div class="skel" style="height:150px"></div>
+    </div>
+
+    <div id="main" hidden>
+      <div class="deck-panel" data-panel="overview">
+        <section id="weekly"></section>
+        <div class="section-head"><h2>This month at a glance</h2><span class="eyebrow" id="month-label"></span></div>
+        <section id="kpis" class="grid g4"></section>
+        <div class="section-head">
+          <h2>Monthly harvest</h2>
+          <button class="btn" id="demo-btn" style="font-size:12px; padding:7px 13px;">Preview celebration</button>
+        </div>
+        <section class="card card-pad" style="margin-bottom:4px;">
+          <div class="harvest" id="harvest"></div>
+          <p class="eyebrow" style="text-align:center; margin-top:14px;">Each glass fills as content ships. Clear the target and it empties, harvested.</p>
+        </section>
+      </div>
+
+      <div class="deck-panel" data-panel="managers" hidden>
+        <div class="section-head" style="margin-top:0;"><h2>Social media managers</h2><span class="eyebrow">Ownership · XP · Achievements</span></div>
+        <section id="managers" class="grid g2"></section>
+      </div>
+
+      <div class="deck-panel" data-panel="channels" hidden>
+        <div class="section-head" style="margin-top:0;"><h2>Channel scorecards</h2><span class="eyebrow">Target vs actual</span></div>
+        <section id="channels" class="grid g3"></section>
+      </div>
+
+      <div class="deck-panel" data-panel="spread" hidden>
+        <div class="section-head" style="margin-top:0;"><h2>Distribution spread</h2><span class="eyebrow">Every platform, all channels</span></div>
+        <section class="card card-pad" id="platforms"></section>
+        <div class="section-head"><h2>Leaderboard</h2><span class="eyebrow">Channels ranked</span></div>
+        <section class="card card-pad" id="leaderboard"></section>
+        <div class="section-head"><h2>Execution trend</h2><span class="eyebrow" id="trend-range">Month over month</span></div>
+        <section class="card card-pad" id="trend"></section>
+      </div>
+
+      <div class="deck-panel" data-panel="plan" hidden>
+        <div class="section-head" style="margin-top:0;"><h2>Editorial plan</h2><span class="eyebrow">The real agreed volume, not the checklist</span></div>
+        <section id="plan-managers" class="grid g2"></section>
+        <div class="section-head"><h2>Every quota, one table</h2><span class="eyebrow">Both managers combined</span></div>
+        <section id="plan-table"></section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="celebration" hidden>
+  <div class="card celcard">
+    <div class="cel-ic" id="cel-icon"></div>
+    <h2 style="font-size:24px; margin-bottom:8px;" id="cel-title">Target achieved</h2>
+    <p style="color:var(--ink-2); font-size:14px; margin-bottom:20px;" id="cel-body"></p>
+    <button class="btn primary" id="cel-close">Back to the dashboard</button>
+  </div>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/plan-embed.js"></script>
+<script>
+  // Sidebar panel switching — client-side only, no navigation.
+  document.querySelectorAll('.deck-link[data-panel]').forEach(link => {
+    link.onclick = () => {
+      document.querySelectorAll('.deck-link[data-panel]').forEach(l => l.classList.toggle('on', l===link));
+      document.querySelectorAll('.deck-panel').forEach(p => { p.hidden = p.dataset.panel !== link.dataset.panel; });
+    };
+  });
+
+  // dashboard.js already wired window.onDataLoaded = renderAll and called
+  // initPage(). Wrap it so the Plan panel refreshes on the same data tick,
+  // without re-triggering a second sync loop.
+  const _baseOnLoaded = window.onDataLoaded;
+  window.onDataLoaded = () => { _baseOnLoaded(); renderPlanPage(); };
+  window.onMonthChange = window.onDataLoaded;
+</script>
+</body>
+</html>
