@@ -439,7 +439,15 @@ textarea.field-input{ height:auto; padding:10px 12px; resize:vertical; }
   .statbox b{ font-size:17px; }
 }
 /* never let a wide element force the page to scroll sideways */
-html,body{ max-width:100%; overflow-x:hidden; }
+/* Any non-visible overflow-x on html/body — hidden OR clip, both trigger it —
+   silently promotes overflow-y to "auto" per the CSS Overflow spec's paired-
+   axis rule, which breaks every position:sticky element on the page (the
+   topbar, the Command Deck sidebar) even though DevTools still reports
+   position:sticky on them. Every page here is already verified (scrollWidth
+   checks throughout testing) to never overflow sideways on its own, so this
+   blanket safety net was never load-bearing — dropped in favour of sticky
+   actually working. If a future page needs it, scope it to a wrapper div
+   *inside* body, never to html/body themselves. */
 
 .fade-up{ animation:fu .5s cubic-bezier(.2,.9,.25,1) backwards; }
 @keyframes fu{ from{ opacity:0; transform:translateY(12px); } to{ opacity:1; transform:none; } }

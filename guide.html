@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  Designer: Pritam Sonone
+  Website:  https://www.digitalpritam.in
+  Email:    contact@digitalpritam.in
+  Project:  SMM Distribution Dashboard - Indian Farmer
+  Created:  2026-09-17
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Farmer · Gamification Guide</title>
+<meta name="designer" content="Pritam Sonone" data-website="https://www.digitalpritam.in" data-email="contact@digitalpritam.in" data-project="SMM Distribution Dashboard - Indian Farmer" data-created="2026-09-17">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<style>
+  .guide{ max-width:880px; margin:0 auto; padding:28px 24px 72px; }
+  .guide h1{ font-size:26px; }
+  .guide p.lede{ color:var(--ink-2); font-size:14.5px; max-width:64ch; margin-top:8px; line-height:1.7; }
+  .guide-toc{ display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 8px; }
+  .guide-toc a{
+    font-size:12px; font-weight:600; color:var(--ink-2); text-decoration:none;
+    padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card-2);
+  }
+  .guide-toc a:hover{ color:var(--blue); border-color:color-mix(in srgb,var(--blue) 35%,transparent); }
+  .guide-sec{ margin-top:44px; scroll-margin-top:80px; }
+  .guide-sec h2{ font-size:19px; margin-bottom:8px; }
+  .guide-sec > p{ color:var(--ink-2); font-size:13.5px; line-height:1.7; max-width:66ch; margin-bottom:16px; }
+
+  .level-row{
+    display:flex; align-items:center; gap:14px; padding:12px 14px; border-radius:12px;
+    border:1px solid var(--line); background:var(--card); margin-bottom:8px;
+  }
+  .level-badge{
+    width:38px; height:38px; border-radius:11px; flex:none; display:grid; place-items:center;
+    color:#fff; font-weight:800; font-size:13px; background:linear-gradient(150deg,var(--blue),var(--green));
+  }
+  .level-row b{ font-size:14px; }
+  .level-row span{ display:block; font-size:11.5px; color:var(--ink-3); margin-top:1px; }
+  .level-row .num{ margin-left:auto; font-size:12.5px; color:var(--ink-3); text-align:right; flex:none; }
+
+  .ach-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  @media (max-width:640px){ .ach-grid{ grid-template-columns:1fr; } }
+  .ach-card{ display:flex; gap:12px; padding:14px; border-radius:12px; border:1px solid var(--line); background:var(--card); }
+  .ach-card .ic{ width:36px; height:36px; border-radius:10px; flex:none; display:grid; place-items:center; background:var(--green-soft); color:var(--green); }
+  .ach-card b{ font-size:13.5px; display:block; }
+  .ach-card span{ font-size:12px; color:var(--ink-3); display:block; margin-top:2px; line-height:1.5; }
+
+  .life-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  @media (max-width:760px){ .life-grid{ grid-template-columns:repeat(2,1fr); } }
+  .life-card{ padding:14px; border-radius:12px; border:1px solid var(--line); background:var(--card); }
+  .life-card .dot2{ width:9px; height:9px; border-radius:3px; margin-bottom:8px; }
+  .life-card b{ font-size:13px; display:block; margin-bottom:3px; }
+  .life-card span{ font-size:11.5px; color:var(--ink-3); line-height:1.5; }
+
+  .faq{ border:1px solid var(--line); border-radius:12px; background:var(--card); margin-bottom:8px; overflow:hidden; }
+  .faq summary{ padding:13px 16px; cursor:pointer; font-size:13.5px; font-weight:600; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{ content:'+'; color:var(--ink-3); font-weight:700; font-size:16px; }
+  .faq[open] summary::after{ content:'−'; }
+  .faq .faq-body{ padding:0 16px 15px; font-size:13px; color:var(--ink-2); line-height:1.7; }
+</style>
+</head>
+<body>
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true" focusable="false">
+  <metadata><desc>Designer: Pritam Sonone. Website: https://www.digitalpritam.in. Email: contact@digitalpritam.in.</desc></metadata>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brandmark">
+      <div class="logo-slot" id="logo-slot"></div>
+      <div class="logo-div"></div>
+      <div class="brand-sub"><b>Distribution Command</b>Social media control room</div>
+    </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="plan.html">Plan</a>
+      <a href="admin.html">Settings</a>
+      <a href="guide.html" aria-current="page">Guide</a>
+    </nav>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="theme-btn" title="Switch theme" aria-label="Switch theme"></button>
+  </div>
+</header>
+
+<div class="guide">
+  <div class="eyebrow" style="margin-bottom:6px;">Documentation</div>
+  <h1>What the badges, levels and glasses actually mean</h1>
+  <p class="lede">This dashboard turns publishing consistency into a game on purpose — a level pill next to a manager's name, a trophy case of achievements, a glass that fills up. None of it changes the real numbers underneath; this page just explains what each piece stands for.</p>
+
+  <div class="guide-toc">
+    <a href="#levels">Levels</a>
+    <a href="#xp">How XP is earned</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#streaks">Streaks</a>
+    <a href="#harvest">The harvest glasses</a>
+    <a href="#lifecycle">Missed vs due vs upcoming</a>
+    <a href="#faq">FAQ</a>
+  </div>
+
+  <section class="guide-sec" id="levels">
+    <h2>Levels — the capsule next to a manager's name</h2>
+    <p>That small pill reading "Sapling" or "Cultivator" is a level, earned from XP accumulated across every month the dashboard has data for. It's a long-run reputation, not a monthly reset — someone doesn't lose a level just because one month was quiet.</p>
+    <div id="levels-list"></div>
+  </section>
+
+  <section class="guide-sec" id="xp">
+    <h2>How XP is earned</h2>
+    <p>Two things earn XP, both pulled straight from the checklist, nothing typed in by hand:</p>
+    <div class="life-grid">
+      <div class="life-card">
+        <div class="dot2" style="background:var(--blue);"></div>
+        <b>10 XP per piece published</b>
+        <span>Every platform tick that's marked TRUE for the month counts once, weighted the same way the sheet weights it (a Stories tick worth 5 earns 5× the XP of a single post).</span>
+      </div>
+      <div class="life-card">
+        <div class="dot2" style="background:var(--amber);"></div>
+        <b>25 XP per day in the longest streak</b>
+        <span>The longest run of fully-completed working days that month, multiplied by 25. Consistency is worth more per-piece than volume alone.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="guide-sec" id="achievements">
+    <h2>Achievements — the trophy row on each manager's card</h2>
+    <p>Eight badges, each with a plain pass/fail condition. Locked ones show a padlock and, on hover, exactly how close they are.</p>
+    <div class="ach-grid" id="ach-list"></div>
+  </section>
+
+  <section class="guide-sec" id="streaks">
+    <h2>Streaks</h2>
+    <p>A day only counts toward a streak if <b>every</b> tracked platform for that channel was ticked that day — a 90% day still breaks it. Streaks only look at <b>working days</b> (Monday–Friday); a quiet weekend never breaks one, since weekend posting is calendar-driven, not a commitment. "Current streak" counts backward from the most recent closed working day; "longest streak" is the best run anywhere in the month.</p>
+  </section>
+
+  <section class="guide-sec" id="harvest">
+    <h2>The harvest glasses</h2>
+    <p>Each glass fills toward that channel's or manager's <b>full month target</b>, not just what's happened so far — so a glass at 30% on day 5 isn't behind, it's on track. That's what the dashed <b>pace line</b> inside the glass marks: where the fill should be by today if things stay on schedule. Below the line and past that point in the month reads as behind pace; at or above it reads as on pace. Clear 100% of the month's target and every glass drains in a small celebration, then refills for whatever comes next.</p>
+  </section>
+
+  <section class="guide-sec" id="lifecycle">
+    <h2>Missed vs. due today vs. upcoming</h2>
+    <p>A content slot only ever sits in one of these four states — nothing is called "missed" until its window has genuinely closed:</p>
+    <div class="life-grid">
+      <div class="life-card"><div class="dot2" style="background:var(--green);"></div><b>Done</b><span>Ticked, whenever it happened.</span></div>
+      <div class="life-card"><div class="dot2" style="background:var(--coral);"></div><b>Missed</b><span>A working day strictly before today that was never ticked.</span></div>
+      <div class="life-card"><div class="dot2" style="background:var(--blue);"></div><b>Due today</b><span>Today's remaining slots. Never counted as missed while today isn't over.</span></div>
+      <div class="life-card"><div class="dot2" style="background:var(--ink-4);"></div><b>Upcoming</b><span>Working days later this month, not due yet.</span></div>
+    </div>
+    <p style="margin-top:14px;">Weekends are a fifth, separate bucket: optional extras, calendar-driven, never counted as missed either way.</p>
+  </section>
+
+  <section class="guide-sec" id="faq">
+    <h2>Frequently asked</h2>
+    <details class="faq">
+      <summary>Why did my level not go up even though this month was great?</summary>
+      <div class="faq-body">Levels track total XP across every month on record, so one strong month moves the bar but rarely crosses a whole threshold on its own. Check the "XP to next level" line on the manager card — it shows exactly how much further there is to go.</div>
+    </details>
+    <details class="faq">
+      <summary>Why does the Editorial Plan page show different numbers than the checklist?</summary>
+      <div class="faq-body">They're deliberately two different measurements. The checklist counts "was this platform touched today" — a yes/no tick. The Editorial Plan counts actual content types (a reel, a carousel, a story) agreed in Settings → Editorial rules. They're different units on purpose, and mixing them produces misleading numbers, which is why the dashboard never compares them directly.</div>
+    </details>
+    <details class="faq">
+      <summary>Can the levels, XP formula or achievement thresholds be changed?</summary>
+      <div class="faq-body">Yes, but not from Settings yet — they're defined in the codebase (js/core.js) rather than the admin panel, since changing them retroactively changes everyone's history. Ask for a specific change and it can be adjusted directly.</div>
+    </details>
+  </section>
+
+  <footer class="deck-footer" style="margin-top:52px; padding:22px 0; border-top:1px solid var(--line);">
+    <span class="eyebrow">Indian Farmer &middot; Distribution Command</span>
+    <nav style="display:flex; gap:16px; flex-wrap:wrap;">
+      <a href="index.html" style="color:var(--ink-3); text-decoration:none; font-size:12.5px; font-weight:600;">Dashboard</a>
+      <a href="plan.html" style="color:var(--ink-3); text-decoration:none; font-size:12.5px; font-weight:600;">Plan</a>
+      <a href="admin.html" style="color:var(--ink-3); text-decoration:none; font-size:12.5px; font-weight:600;">Settings</a>
+    </nav>
+  </footer>
+</div>
+
+<script src="js/core.js"></script>
+<script>
+  // Rendered straight from the live LEVELS / ACHIEVEMENTS arrays in core.js,
+  // so this page can never drift out of sync with what the dashboard
+  // actually awards.
+  document.getElementById('levels-list').innerHTML = LEVELS.map((l,i) => {
+    const next = LEVELS[i+1];
+    const range = next ? `${fmt(l.min)}–${fmt(next.min-1)} XP` : `${fmt(l.min)}+ XP`;
+    return `<div class="level-row">
+      <div class="level-badge">${l.n}</div>
+      <div><b>${escText(l.name)}</b><span>Level ${l.n} of ${LEVELS.length}</span></div>
+      <div class="num">${range}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('ach-list').innerHTML = ACHIEVEMENTS.map(a => `
+    <div class="ach-card">
+      <div class="ic">${ic(a.icon)}</div>
+      <div><b>${escText(a.name)}</b><span>${escText(a.desc)}</span></div>
+    </div>`).join('');
+</script>
+</body>
+</html>

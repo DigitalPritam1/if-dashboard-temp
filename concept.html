@@ -18,9 +18,21 @@
 <link rel="stylesheet" href="css/base.css">
 <style>
   /* This concept trades the long scroll for a fixed sidebar and one focused
-     panel at a time — same data, same brand colours, different shape. */
+     panel at a time — same data, same brand colours, different shape. The
+     top bar is the same component every other page uses, so orientation
+     ("where am I, how do I get to Settings") never has to be relearned. */
   .wrap{ max-width:none; padding:0; }
-  body::before{ position:fixed; }
+  .deck-rail{ top:65px; height:calc(100vh - 65px); }
+  @media (max-width:900px){ .deck-rail{ top:auto; height:auto; } }
+
+  .deck-footer{
+    border-top:1px solid var(--line); padding:22px 28px; margin-top:8px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .deck-footer nav{ display:flex; gap:16px; flex-wrap:wrap; }
+  .deck-footer a{ color:var(--ink-3); text-decoration:none; font-size:12.5px; font-weight:600; }
+  .deck-footer a:hover{ color:var(--blue); }
+  @media (max-width:900px){ .deck-footer{ padding:18px 16px; } }
 </style>
 </head>
 <body>
@@ -36,28 +48,41 @@
   </defs>
 </svg>
 
-<div class="deck">
-  <aside class="deck-rail">
+<header class="topbar">
+  <div class="topbar-in">
     <div class="brandmark">
       <div class="logo-slot" id="logo-slot"></div>
+      <div class="logo-div"></div>
+      <div class="brand-sub"><b>Command Deck</b>Concept · same data, different shape</div>
     </div>
+    <nav class="topnav">
+      <a href="index.html">Dashboard</a>
+      <a href="plan.html">Plan</a>
+      <a href="admin.html">Settings</a>
+      <a href="guide.html">Guide</a>
+      <a href="concept.html" aria-current="page">Command Deck</a>
+    </nav>
+    <div class="spacer"></div>
+    <span class="pill" id="today-pill"></span>
+    <span class="pill live" id="live-pill"><span class="dot"></span><span id="live-txt">Syncing</span></span>
+    <button class="iconbtn" id="theme-btn" title="Switch theme" aria-label="Switch theme"></button>
+    <button class="btn sync-btn" id="refresh-btn" aria-label="Sync sheet now">
+      <span class="sync-ic"></span><span class="sync-label">Sync sheet</span>
+    </button>
+  </div>
+</header>
+
+<div class="deck">
+  <aside class="deck-rail">
     <a class="deck-link on" data-panel="overview"><svg class="i" viewBox="0 0 24 24"><path d="M12 2.5 2.5 7.5 12 12.5l9.5-5L12 2.5ZM2.5 16.5 12 21.5l9.5-5M2.5 12 12 17l9.5-5"/></svg>Overview</a>
     <a class="deck-link" data-panel="managers"><svg class="i" viewBox="0 0 24 24"><path d="M16.5 20.5v-1.8a4 4 0 0 0-4-4h-5a4 4 0 0 0-4 4v1.8M10 11a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5ZM21.5 20.5v-1.8a4 4 0 0 0-3-3.9M16.5 3.7a4 4 0 0 1 0 7.3"/></svg>Managers</a>
     <a class="deck-link" data-panel="channels"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>Channels</a>
     <a class="deck-link" data-panel="spread"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3.5 9h17M3.5 15h17M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Distribution</a>
-    <a class="deck-link" data-panel="plan"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>Plan</a>
+    <a class="deck-link" data-panel="plan"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg>Plan (quick view)</a>
 
     <div class="deck-rail-foot">
-      <span class="pill live" id="live-pill" style="justify-content:center;"><span class="dot"></span><span id="live-txt">Syncing</span></span>
-      <button class="btn sync-btn" id="refresh-btn" style="justify-content:center;" aria-label="Sync sheet now">
-        <span class="sync-ic"></span><span class="sync-label">Sync sheet</span>
-      </button>
-      <div style="display:flex; gap:6px;">
-        <button class="iconbtn" id="theme-btn" style="flex:1;" title="Switch theme" aria-label="Switch theme"></button>
-        <a class="iconbtn" href="index.html" style="flex:1; text-decoration:none; display:grid; place-items:center;" title="Back to classic view" aria-label="Back to classic view">
-          <svg class="i" viewBox="0 0 24 24"><path d="M9 6 3 12l6 6M3 12h18"/></svg>
-        </a>
-      </div>
+      <a class="deck-link" href="admin.html"><svg class="i" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V19.6a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.04H2.4a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.05 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H8.5A1.7 1.7 0 0 0 9.5 3V2.9a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.04 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V8.5a1.7 1.7 0 0 0 1.56 1.04h.09a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.04Z"/></svg>Settings</a>
+      <a class="deck-link" href="guide.html"><svg class="i" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7v.5"/><path d="M12 17h.01"/></svg>Help &amp; guide</a>
     </div>
   </aside>
 
@@ -67,7 +92,6 @@
         <div class="eyebrow" id="scope-note" style="margin-bottom:4px;"></div>
         <div class="segbar" id="month-tabs" role="tablist"></div>
       </div>
-      <span class="pill" id="today-pill"></span>
     </div>
 
     <div id="boot" class="grid g4">
@@ -117,12 +141,29 @@
       </div>
 
       <div class="deck-panel" data-panel="plan" hidden>
-        <div class="section-head" style="margin-top:0;"><h2>Editorial plan</h2><span class="eyebrow">The real agreed volume, not the checklist</span></div>
+        <div class="section-head" style="margin-top:0;"><h2>Editorial plan</h2><span class="eyebrow">The real agreed volume, not the checklist &middot; <a href="plan.html" style="color:var(--blue);">open full page</a></span></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;">
+          <span class="eyebrow">Emphasise</span>
+          <div class="segbar" id="plan-mode" role="tablist">
+            <button class="seg" data-mode="weekly" aria-selected="true">Weekly</button>
+            <button class="seg" data-mode="monthly" aria-selected="false">Monthly</button>
+          </div>
+        </div>
         <section id="plan-managers" class="grid g2"></section>
         <div class="section-head"><h2>Every quota, one table</h2><span class="eyebrow">Both managers combined</span></div>
         <section id="plan-table"></section>
       </div>
     </div>
+
+    <footer class="deck-footer">
+      <span class="eyebrow">Indian Farmer &middot; Distribution Command &middot; Command Deck concept</span>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="plan.html">Plan</a>
+        <a href="admin.html">Settings</a>
+        <a href="guide.html">Gamification guide</a>
+      </nav>
+    </footer>
   </main>
 </div>
 
@@ -137,7 +178,6 @@
 
 <script src="js/core.js"></script>
 <script src="js/dashboard.js"></script>
-<script src="js/plan-embed.js"></script>
 <script>
   // Sidebar panel switching — client-side only, no navigation.
   document.querySelectorAll('.deck-link[data-panel]').forEach(link => {

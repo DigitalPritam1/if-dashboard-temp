@@ -41,6 +41,7 @@
       <a href="index.html">Dashboard</a>
       <a href="plan.html" aria-current="page">Plan</a>
       <a href="admin.html">Settings</a>
+      <a href="guide.html">Guide</a>
     </nav>
     <div class="spacer"></div>
     <span class="pill" id="today-pill"></span>
@@ -68,7 +69,14 @@
   </div>
 
   <main id="main" hidden>
-    <section id="plan-managers" class="grid g2" style="margin-top:20px;"></section>
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:20px;">
+      <span class="eyebrow">Emphasise</span>
+      <div class="segbar" id="plan-mode" role="tablist">
+        <button class="seg" data-mode="weekly" aria-selected="true">Weekly</button>
+        <button class="seg" data-mode="monthly" aria-selected="false">Monthly</button>
+      </div>
+    </div>
+    <section id="plan-managers" class="grid g2" style="margin-top:12px;"></section>
 
     <div class="section-head"><h2>Every quota, one table</h2><span class="eyebrow">Both managers combined</span></div>
     <section id="plan-table"></section>
@@ -76,6 +84,10 @@
 </div>
 
 <script src="js/core.js"></script>
-<script src="js/plan.js"></script>
+<script>
+  window.onDataLoaded = renderPlanPage;
+  window.onMonthChange = renderPlanPage;
+  initPage();
+</script>
 </body>
 </html>
